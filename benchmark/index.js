@@ -8,6 +8,7 @@ import * as nanocolors from 'nanocolors'
 import picocolors from 'picocolors'
 import * as yoctocolors from 'yoctocolors'
 import picochalk from '../index.js'
+import proxyPicochalk from '../proxy.js'
 import { Bench } from 'tinybench'
 
 const bench = new Bench({ time: 100, warmupTime: 1000 })
@@ -132,6 +133,18 @@ bench
           picochalk.yellow('name') +
           ' to use time limit with ' +
           picochalk.yellow(++index),
+      )
+  })
+  .add('picochalk-proxy', () => {
+    proxyPicochalk.red('.') +
+      proxyPicochalk.yellow('.') +
+      proxyPicochalk.green('.') +
+      proxyPicochalk.bgRed(proxyPicochalk.black(' ERROR ')) +
+      proxyPicochalk.red(
+        ' Add plugin ' +
+          proxyPicochalk.yellow('name') +
+          ' to use time limit with ' +
+          proxyPicochalk.yellow(++index),
       )
   })
 

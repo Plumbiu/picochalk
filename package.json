@@ -1,13 +1,15 @@
 {
   "name": "picochalk",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "The minimal chalk implementation",
   "main": "dist/index.js",
   "types": "index.d.ts",
   "type": "module",
   "files": [
-    "dist",
-    "index.d.ts"
+    "index.js",
+    "proxy.js",
+    "index.d.ts",
+    "proxy.d.ts"
   ],
   "keywords": [
     "color",

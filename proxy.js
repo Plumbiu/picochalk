@@ -54,26 +54,21 @@ const colors = {
   bgCyanBright: init(106, 49),
   bgWhiteBright: init(107, 49),
 }
-
-let openCode = ''
-let closeCode = ''
+const stack = []
 
 const proxyFn = (input) => {
-  const ans = openCode + input + closeCode
-  openCode = ''
-  closeCode = ''
-  return ans
+  const [left, right] = stack.pop()
+  return left + input + right
 }
 
 const getHandler = (key, proxy) => {
-  const [left, right] = colors[key]
-  openCode = left + openCode
-  closeCode += right
+  stack.push(colors[key])
   return proxy
 }
 
-const picochalk = new Proxy(proxyFn, {
-  get: (_, key) => (supportColor ? getHandler(key, picochalk) : picochalk),
+const proxyPicochalk = new Proxy(proxyFn, {
+  get: (_, key) =>
+    supportColor ? getHandler(key, proxyPicochalk) : proxyPicochalk,
 })
 
-export default picochalk
+export default proxyPicochalk

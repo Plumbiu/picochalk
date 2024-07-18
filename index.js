@@ -4,8 +4,7 @@ const hasColor = tty?.WriteStream?.prototype?.hasColors?.()
 const stack = []
 const picochalk = (str) => {
   const [left, right] = stack.pop()
-  const out = left + str + right
-  return out
+  return left + str + right
 }
 const getFn = hasColor
   ? (left, right) => () => {
@@ -68,7 +67,5 @@ function dp(key, left, right) {
     get: getFn(left, right),
   })
 }
-
-picochalk.prototype = picochalk
 
 export default picochalk

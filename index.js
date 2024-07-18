@@ -1,26 +1,22 @@
 import tty from 'node:tty'
 
 const hasColor = tty?.WriteStream?.prototype?.hasColors?.()
-
-let open = ''
-let close = ''
+const stack = []
 const picochalk = (str) => {
-  const out = open + str + close
-  open = ''
-  close = ''
+  const [left, right] = stack.pop()
+  const out = left + str + right
   return out
 }
 const getFn = hasColor
   ? (left, right) => () => {
-      open = left + open
-      close += right
+      stack.push([left, right])
       return picochalk
     }
   : () => () => picochalk
-
 const c22 = '\x1b[22m'
 const c39 = '\x1b[39m'
 const c49 = '\x1b[49m'
+
 dp('reset', '\x1b[0m', '\x1b[0m')
 dp('bold', '\x1b[1m', c22)
 dp('dim', '\x1b[2m', c22)

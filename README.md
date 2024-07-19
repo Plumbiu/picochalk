@@ -35,6 +35,19 @@ Or use `Proxy` version, it is slower than `Object.defineProperty`：
 + picochalk.blue.bgWhite('Hello world')
 ```
 
+# Limitation
+
+The arguments should not exist `picochalk`
+
+```js
+import picochalk from 'picochalk'
+
+// Wrong
+picochalk.red('foo' + picochalk.bgWhite(': bar'))
+```
+
+> I'm working on it
+
 # Benchmark
 
 Run `pnpm bench`:

@@ -1,5 +1,5 @@
 import tty from 'node:tty'
-const supportColor = tty?.WriteStream?.prototype?.hasColors?.()
+const hasColor = tty?.WriteStream?.prototype?.hasColors?.()
 
 const init = (left, right) => [`\x1b[${left}m`, `\x1b[${right}m`]
 // copyed from https://github.com/chalk/chalk/blob/main/source/vendor/ansi-styles/index.js
@@ -54,21 +54,24 @@ const colors = {
   bgCyanBright: init(106, 49),
   bgWhiteBright: init(107, 49),
 }
-const stack = []
-
+let open = ''
+let close = ''
 const proxyFn = (input) => {
-  const [left, right] = stack.pop()
-  return left + input + right
-}
-
-const getHandler = (key, proxy) => {
-  stack.push(colors[key])
-  return proxy
+  const output = open + input + close
+  open = ''
+  close = ''
+  return output
 }
 
 const proxyPicochalk = new Proxy(proxyFn, {
-  get: (_, key) =>
-    supportColor ? getHandler(key, proxyPicochalk) : proxyPicochalk,
+  get(_, key) {
+    if (hasColor) {
+      const [left, right] = colors[key]
+      open = left + open
+      close += right
+    }
+    return proxyPicochalk
+  },
 })
 
 export default proxyPicochalk

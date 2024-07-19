@@ -1,17 +1,14 @@
 import tty from 'node:tty'
 
 const hasColor = tty?.WriteStream?.prototype?.hasColors?.()
-const stack = []
-const picochalk = (str) => {
-  const [left, right] = stack.pop()
-  return left + str + right
+let open = ''
+let close = ''
+const picochalk = (input) => {
+  const output = open + input + close
+  open = ''
+  close = ''
+  return output
 }
-const getFn = hasColor
-  ? (left, right) => () => {
-      stack.push([left, right])
-      return picochalk
-    }
-  : () => () => picochalk
 
 dp('reset', '\x1b[0m', '\x1b[0m')
 dp('bold', '\x1b[1m', '\x1b[22m')
@@ -61,7 +58,13 @@ dp('bgWhiteBright', '\x1b[107m', '\x1b[49m')
 
 function dp(key, left, right) {
   Object.defineProperty(picochalk, key, {
-    get: getFn(left, right),
+    get() {
+      if (hasColor) {
+        open = left + open
+        close += right
+      }
+      return picochalk
+    },
   })
 }
 
